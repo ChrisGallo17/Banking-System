@@ -80,7 +80,6 @@ void Bank::menu()
     {
         // Remove account function
         removeAccount();
-        cout << "Remove account: Work in progress, enter another number" << endl;
         menu();
     }
     else if(cursor == 5)
@@ -104,7 +103,7 @@ void Bank::addAccount()
     cin >> accountNum;
     accountNum = accountNum - 1; // Subtracted 1 because the array is from 0-99
 
-    if (accountNum < 0 || accountNum > 99){
+    if (accountNum < 0 || accountNum > 99){ // Checks to make sure it input is within bounds of array
         cout << "Enter a number between 1 and 100" << endl;
         addAccount();
     }
@@ -115,16 +114,23 @@ void Bank::addAccount()
             cout << "Enter a pin number: " << endl;
             cin >> pin;
             acPin[accountNum] = pin;
-            cout << "Enter your Name" << endl;
+            cout << "Enter your first name" << endl;
             cin >> name;
             acName[accountNum] = name;
             cout << "How much money would you like to put into your account? " << endl;
             cin >> withdraw;
-            acBalance[accountNum] = withdraw;
-            cout << acName[accountNum] << ", your account has been created successfully!" << endl;
-            cout << "Your current balance is $" << acBalance[accountNum] << endl;
 
-            //cout << acName[accountNum] << acNum[accountNum] << acPin[accountNum] << endl;
+            if (withdraw < 0){
+                cout << acName[accountNum] << ", you cannot start you account in debt." << endl;
+                cout << "Your account will be created with a balance of $0" << endl;
+                acBalance[accountNum] = 0;
+            }
+            else {
+                acBalance[accountNum] = withdraw;
+                cout << acName[accountNum] << ", your account has been created successfully!" << endl;
+                cout << "Your current balance is $" << acBalance[accountNum] << endl;
+            }
+
         } else {
             cout << "This account number is already taken, please select another number: \n";
             addAccount();
@@ -171,6 +177,56 @@ void Bank::viewAccount() {
 
 void Bank::removeAccount()
 {
+    int num, pin;
+    string confirm;
+
+    cout << "Enter your account number: " << endl;
+    cout << "Enter 0 to go back to the menu:" << endl;
+    cin >> num;
+    num = num - 1;
+
+    if (num <= -2 || num >= 100) {
+        cout << "Please enter a valid number" << endl;
+        removeAccount();
+    }
+    else if(num == (-1)){
+        // Takes user back to the menu if they enter 101
+    }
+    else if (acNum[num] == 0) {
+        cout << "This account does not exist." << endl;
+        removeAccount();
+    }
+    else {
+        cout << "Welcome " << acName[num] << ", your account number is " << acNum[num];
+        cout << ".\nEnter your pin to remove your account: " << endl;
+        cin >> pin;
+        //Checks if pin is correct, then proceeds with the withdraw
+        if (pin == acPin[num]) {
+            cout << acName[num] << ", are you sure you would like to erase your account?" << endl;
+            cout << "Enter y for yes / n for no:" << endl;
+            cin >> confirm;
+
+            if (confirm == "y") {
+                acName[num] = "";
+                acNum[num] = 0;
+                acBalance[num] = 0;
+                acPin[num] = 0;
+
+                cout << "Your account has been removed from the system" << endl;
+            }
+            else if (confirm == "n") {
+                cout << "Your account was not removed" << endl;
+            }
+            else {
+                cout << "The input was not valid and the account was not removed" << endl;
+            }
+        }
+        else {
+            cout << "Incorrect pin number for account number " << acNum[num] << endl;
+            cout << "Try another account." << endl;
+            removeAccount();
+        }
+    }
 
 }
 
@@ -198,9 +254,15 @@ void Bank::withdraw()
             cout << "How much money would you like to withdraw?" << endl;
             cin >> wd;
 
-            acBalance[num] = acBalance[num] - wd;
-
-            cout << "Your balance is now $" << acBalance[num];
+            if (acBalance[num] < wd){
+                cout << "You do not have enough money in your account" << endl;
+                cout << "Please try again." << endl;
+                withdraw();
+            }
+            else {
+                acBalance[num] = acBalance[num] - wd;
+                cout << "Your balance is now $" << acBalance[num];
+            }
         }
         else {
             cout << "Incorrect pin number for account number " << acNum[num] << endl;
@@ -247,6 +309,7 @@ void Bank::deposit()
     }
 }
 
+//currently a work in progress, planning on being a function to verify pin
 void Bank::checkPin() {/*
     int num, pin;
 
