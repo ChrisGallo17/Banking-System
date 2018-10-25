@@ -15,13 +15,28 @@ public:
     void removeAccount();
     void withdraw();
     void deposit();
-    void checkPin();
+    void checkAccounts();
 
 };
 
 int main()
 {
     Bank bk;
+
+    acNum[72] = 72;
+    acPin[72] = 72;
+    acBalance[72] = 500;
+    acName[72] = "Yoda";
+
+    acNum[34] = 34;
+    acPin[34] = 34;
+    acBalance[34] = 700;
+    acName[34] = "Chewy";
+
+    acNum[55] = 55;
+    acPin[55] = 55;
+    acBalance[55] = 1000;
+    acName[55] = "Obi'Wan";
 
     cout << "\nWelcome to your Banking System" << endl;
     bk.menu();
@@ -36,7 +51,8 @@ void Bank::menu()
     cout << "Enter 2 to view account balance " << endl;
     cout << "Enter 3 to withdraw or deposit from account " << endl;
     cout << "Enter 4 to remove account " << endl;
-    cout << "Enter 5 to exit " << endl;
+    cout << "Enter 5 to view accounts (admin) " << endl;
+    cout << "Enter 6 to exit " << endl;
 
     cursor = 0;
 
@@ -84,7 +100,12 @@ void Bank::menu()
     }
     else if(cursor == 5)
     {
-        exit(5);
+        checkAccounts();
+        menu();
+    }
+    else if(cursor == 6)
+    {
+        exit(6);
     }
     else
     {
@@ -309,19 +330,25 @@ void Bank::deposit()
     }
 }
 
-//currently a work in progress, planning on being a function to verify pin
-void Bank::checkPin() {/*
-    int num, pin;
+// Administrative function to see all current accounts
+// Master Pin is 4321
+void Bank::checkAccounts() {
 
-    cout << ".\nEnter your pin to check your balance: " << endl;
+    int pin, i;
+
+    cout << "Enter master pin to view all accounts: " << endl;
     cin >> pin;
 
-    if (pin == acPin[num]) {
-        cout << "Your current balance is $" << acBalance[num] << endl;
+    if (pin == 4321) {
+        cout << "Account number, name, and balance: " << endl;
+
+        for (i = 0; i < 100; i++){
+            if (acNum[i] != 0){
+                cout << acNum[i] << " " << acName[i] << " $" << acBalance[i] << endl;
+            }
+        }
     }
     else {
-        cout << "Incorrect pin number for account number " << acNum[num] << endl;
-        cout << "Try another account." << endl;
-        viewAccount();
-    }*/
+        cout << "Incorrect master pin " << endl;
+    }
 }
